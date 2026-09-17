@@ -2,9 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: eval-go-gin-min
+  namespace: default
   labels:
     app.kubernetes.io/name: eval-go-gin-min
-    app.kubernetes.io/component: web
+    app.kubernetes.io/instance: eval-go-gin-min
+    app.kubernetes.io/version: '1.0'
     app.kubernetes.io/part-of: eval-go-gin-min
 spec:
   replicas: 1
@@ -21,7 +23,8 @@ spec:
       labels:
         app: eval-go-gin-min
         app.kubernetes.io/name: eval-go-gin-min
-        app.kubernetes.io/component: web
+        app.kubernetes.io/instance: eval-go-gin-min
+        app.kubernetes.io/version: '1.0'
         app.kubernetes.io/part-of: eval-go-gin-min
     spec:
       containers:
@@ -37,27 +40,25 @@ spec:
           limits:
             cpu: 500m
             memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /health
             port: 8000
           initialDelaySeconds: 5
-          periodSeconds: 10
+          periodSeconds: 5
           timeoutSeconds: 2
-          successThreshold: 1
-          failureThreshold: 3
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 8000
-          initialDelaySeconds: 15
-          periodSeconds: 20
-          timeoutSeconds: 2
-          successThreshold: 1
           failureThreshold: 3
         startupProbe:
           httpGet:
             path: /health
             port: 8000
-          failureThreshold: 30
           periodSeconds: 10
+          failureThreshold: 30
