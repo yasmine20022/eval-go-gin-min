@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eval-go-gin-min
+  namespace: default
+  labels:
+    app.kubernetes.io/name: eval-go-gin-min
+    app.kubernetes.io/instance: eval-go-gin-min
+    app.kubernetes.io/version: '1.0'
+    app.kubernetes.io/part-of: eval-go-gin-min
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eval-go-gin-min
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: eval-go-gin-min
+        app.kubernetes.io/name: eval-go-gin-min
+        app.kubernetes.io/instance: eval-go-gin-min
+        app.kubernetes.io/version: '1.0'
+        app.kubernetes.io/part-of: eval-go-gin-min
+    spec:
+      containers:
+      - name: eval-go-gin-min
+        image: eval-go-gin-min:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 250m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 2
+          failureThreshold: 3
+        startupProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          periodSeconds: 10
+          failureThreshold: 30
