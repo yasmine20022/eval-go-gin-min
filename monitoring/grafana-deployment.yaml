@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: grafana
-  namespace: deploy-proj-342d6aa07714
+  namespace: deploy-proj-d8a3611aa89c
   labels:
     app: grafana
 spec:
@@ -89,7 +89,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: grafana
-  namespace: deploy-proj-342d6aa07714
+  namespace: deploy-proj-d8a3611aa89c
   labels:
     app: grafana
 spec:
